@@ -8,6 +8,7 @@ namespace WindowsFormsApp1
 {
     class StorageException:Exception
     {
+
         public StorageException(string message) : base(message) { }
     }
 }

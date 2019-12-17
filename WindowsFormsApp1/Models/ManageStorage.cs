@@ -4,14 +4,16 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApp1.Events;
 
 namespace WindowsFormsApp1.Models
 {
     class ManageStorage
     {
+        public delegate void StorageHandler(object sender, StorageEventArgs e);
+        public event StorageHandler OutOfGoodNotify;
+        
         public void MinusUserAmountFromItemAmout(ItemType itemType, string name, double amount, Storage storage)
         {
             if (itemType == ItemType.Grocery)
@@ -21,8 +23,14 @@ namespace WindowsFormsApp1.Models
                     if (storageProduct.Name == name)
                     {
                         storageProduct.Weight -= amount;
+                        if(storageProduct.Weight == 0)
+                        {
+                            OutOfGoodNotify?.Invoke(this, new StorageEventArgs($"Товар '{storageProduct.Name}' закінчився"));
+                        }
                     }
                 }
+
+                
             }
             else if (itemType == ItemType.Drink)
             {
@@ -31,6 +39,10 @@ namespace WindowsFormsApp1.Models
                     if (storageProduct.Name == name)
                     {
                         storageProduct.Volume -= amount;
+                        if (storageProduct.Volume == 0)
+                        {
+                            OutOfGoodNotify?.Invoke(this, new StorageEventArgs($"Товар '{storageProduct.Name}' закінчився"));
+                        }
                     }
                 }
             }
@@ -39,6 +51,7 @@ namespace WindowsFormsApp1.Models
         {
             if (itemType == ItemType.Grocery)
             {
+                
                 foreach (Grocery product in storage.Products.Where(prod => prod.Type == ItemType.Grocery))
                 {
                     if (product.Name == name)
@@ -62,7 +75,7 @@ namespace WindowsFormsApp1.Models
                 }
                 if (amount > amountOfUserProduct)
                 {
-                    throw new StorageException("Такої кількості немає на складі!");
+                    throw new StorageException("Такої кількості товару немає на складі!");
                 }
             }
         }
@@ -115,7 +128,7 @@ namespace WindowsFormsApp1.Models
             BinaryFormatter formatter = new BinaryFormatter();
             using (FileStream sw = new FileStream(path, FileMode.Create))
             {
-                formatter.Serialize(sw, "Чек покупок у магазині");
+                formatter.Serialize(sw, "Чек покупок у магазині\n");
                 foreach (var item in Check)
                 {
                     formatter.Serialize(sw, item);
@@ -153,7 +166,7 @@ namespace WindowsFormsApp1.Models
                 {
                     sw.WriteLine(item);
                 }
-                sw.WriteLine($"Загальна сума: {totalPrice} грн.\n Дата та час: {dateTime}");
+                sw.WriteLine($"Загальна сума: {totalPrice} грн.\nДата та час: {dateTime}");
             }
         }
     }

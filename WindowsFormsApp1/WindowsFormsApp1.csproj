@@ -46,13 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\StorageEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StorageEditor.Designer.cs">
+      <DependentUpon>StorageEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\CheckItem.cs" />
     <Compile Include="Models\Drinks.cs" />
     <Compile Include="Models\ManageStorage.cs" />
-    <Compile Include="UI.cs">
+    <Compile Include="Events\StorageEventArgs.cs" />
+    <Compile Include="Forms\UI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI.Designer.cs">
+    <Compile Include="Forms\UI.Designer.cs">
       <DependentUpon>UI.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Grocery.cs" />
@@ -62,7 +69,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Exceptions\StorageException.cs" />
-    <EmbeddedResource Include="UI.resx">
+    <EmbeddedResource Include="Forms\StorageEditor.resx">
+      <DependentUpon>StorageEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\UI.resx">
       <DependentUpon>UI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
